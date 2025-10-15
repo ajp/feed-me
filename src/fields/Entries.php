@@ -200,9 +200,18 @@ class Entries extends Field implements FieldInterface
                 }
             }
 
+
             Plugin::info('Search for existing entry with query `{i}`', ['i' => Json::encode($showCriteria)]);
 
-            $ids = $query->ids();
+            $ids = [];
+            if (!empty($sectionIds)) {
+                foreach ($sectionIds as $sectionId) {
+                    $query->sectionId = $sectionId;
+                    $ids = array_merge($ids, $query->ids());
+                }
+            } else {
+                $ids = $query->ids();
+            }
 
             $foundElements = array_merge($foundElements, $ids);
 
